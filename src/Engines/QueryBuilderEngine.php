@@ -268,7 +268,8 @@ class QueryBuilderEngine extends BaseEngine implements DataTableEngineContract
 
         foreach ($this->request->orderableColumns() as $orderable) {
             $column = $this->setupOrderColumn($orderable);
-            if (isset($this->columnDef['order'][$column])) {
+
+            if (count($this->columnDef['order']) && isset($this->columnDef['order'][$column])) {
                 $method     = $this->columnDef['order'][$column]['method'];
                 $parameters = $this->columnDef['order'][$column]['parameters'];
                 $this->compileColumnQuery(
@@ -285,6 +286,9 @@ class QueryBuilderEngine extends BaseEngine implements DataTableEngineContract
                     $column = 'id';
                 }
                 if ($column === '0') {
+                    $column = '1';
+                }
+                if(strpos($column, ' ') >0){
                     $column = '1';
                 }
                 $this->getQueryBuilder()->orderBy(DB::raw($column), $orderable['direction']);
